@@ -4,7 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'my_button.dart';
 import 'my_textfield.dart';
 import 'square_title.dart';
-import 'mainpage.dart';
+import 'page/calendar_page.dart';
 
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
@@ -43,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => MainPage(), // 로그인 후 환영 화면으로 이동
+          builder: (context) => CalendarPage(), // 로그인 후 환영 화면으로 이동
         ),
       );
     } on FirebaseAuthException catch (e) {
@@ -83,7 +83,7 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => MainPage(),
+            builder: (context) => CalendarPage(),
           ),
         );
       }
