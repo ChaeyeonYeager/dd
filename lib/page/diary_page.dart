@@ -18,21 +18,35 @@ class DiaryPage extends StatefulWidget {
   _DiaryPageState createState() => _DiaryPageState();
 }
 
-class _DiaryPageState extends State<DiaryPage> {
+class _DiaryPageState extends State<DiaryPage> with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late DateTime _selectedDate;
-  String _recordingStatus = "마이크 버튼을 누르고 녹음을 시작하세요";
+  String _recordingStatus = "마이크 버튼을 누르고 녹음을 시작하세요.";
   bool _isListening = false;
   final SpeechService _speechService = SpeechService();
   final ImageService _imageService = ImageService();
   String _recognizedText = "";
   Uint8List? _imageData;
 
+  late AnimationController _animationController;
+
   @override
   void initState() {
     super.initState();
     _selectedDate = widget.selectedDate;
     _speechService.initialize();
+
+    // 애니메이션 컨트롤러 초기화 (깜박임 효과)
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 1),
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   void _changeDate(int days) {
@@ -44,29 +58,30 @@ class _DiaryPageState extends State<DiaryPage> {
   void _onRecordButtonPressed() {
     setState(() {
       _isListening = !_isListening;
+      if (_isListening) {
+        _animationController.repeat(reverse: true); // 녹음 중일 때 애니메이션 반복
+        _speechService.startListening((resultText) {
+          setState(() {
+            _recordingStatus = "$resultText";
+            _recognizedText = resultText;
+          });
+        });
+      } else {
+        _animationController.stop(); // 녹음 중지 시 애니메이션 중지
+        _speechService.stopListening();
+        setState(() {
+          _recordingStatus = "녹음이 완료되었습니다.";
+        });
+
+        _imageService.generateImage(_recognizedText).then((imageUrl) {
+          _downloadImage(imageUrl);
+        }).catchError((error) {
+          setState(() {
+            _recordingStatus = "이미지 생성 중 오류 발생: $error";
+          });
+        });
+      }
     });
-
-    if (_isListening) {
-      _speechService.startListening((resultText) {
-        setState(() {
-          _recordingStatus = "녹음된 텍스트: $resultText";
-          _recognizedText = resultText;
-        });
-      });
-    } else {
-      _speechService.stopListening();
-      setState(() {
-        _recordingStatus = "녹음 중지됨. 마이크 버튼을 눌러 다시 시작하세요.";
-      });
-
-      _imageService.generateImage(_recognizedText).then((imageUrl) {
-        _downloadImage(imageUrl);
-      }).catchError((error) {
-        setState(() {
-          _recordingStatus = "이미지 생성 중 오류 발생: $error";
-        });
-      });
-    }
   }
 
   Future<void> _downloadImage(String? url) async {
@@ -128,16 +143,12 @@ class _DiaryPageState extends State<DiaryPage> {
                   child: Column(
                     children: [
                       Text(
-                        DateFormat('MM').format(
-                            _selectedDate.add(const Duration(days: -1))),
-                        style:
-                            TextStyle(color: Colors.brown[200], fontSize: 20),
+                        DateFormat('MM').format(_selectedDate.add(const Duration(days: -1))),
+                        style: TextStyle(color: Colors.brown[200], fontSize: 20),
                       ),
                       Text(
-                        DateFormat('dd').format(
-                            _selectedDate.add(const Duration(days: -1))),
-                        style:
-                            TextStyle(color: Colors.brown[200], fontSize: 30),
+                        DateFormat('dd').format(_selectedDate.add(const Duration(days: -1))),
+                        style: TextStyle(color: Colors.brown[200], fontSize: 30),
                       ),
                     ],
                   ),
@@ -146,8 +157,7 @@ class _DiaryPageState extends State<DiaryPage> {
                   children: [
                     IconButton(
                       onPressed: () => _changeDate(-1),
-                      icon: const Icon(Icons.arrow_left,
-                          color: Colors.white, size: 30),
+                      icon: const Icon(Icons.arrow_left, color: Colors.white, size: 30),
                     ),
                     Text(
                       DateFormat('MM dd').format(_selectedDate),
@@ -155,8 +165,7 @@ class _DiaryPageState extends State<DiaryPage> {
                     ),
                     IconButton(
                       onPressed: () => _changeDate(1),
-                      icon: const Icon(Icons.arrow_right,
-                          color: Colors.white, size: 30),
+                      icon: const Icon(Icons.arrow_right, color: Colors.white, size: 30),
                     ),
                   ],
                 ),
@@ -165,16 +174,12 @@ class _DiaryPageState extends State<DiaryPage> {
                   child: Column(
                     children: [
                       Text(
-                        DateFormat('MM')
-                            .format(_selectedDate.add(const Duration(days: 1))),
-                        style:
-                            TextStyle(color: Colors.brown[200], fontSize: 20),
+                        DateFormat('MM').format(_selectedDate.add(const Duration(days: 1))),
+                        style: TextStyle(color: Colors.brown[200], fontSize: 20),
                       ),
                       Text(
-                        DateFormat('dd')
-                            .format(_selectedDate.add(const Duration(days: 1))),
-                        style:
-                            TextStyle(color: Colors.brown[200], fontSize: 30),
+                        DateFormat('dd').format(_selectedDate.add(const Duration(days: 1))),
+                        style: TextStyle(color: Colors.brown[200], fontSize: 30),
                       ),
                     ],
                   ),
@@ -182,7 +187,6 @@ class _DiaryPageState extends State<DiaryPage> {
               ],
             ),
           ),
-
           // 생성된 이미지 표시
           if (_imageData != null)
             Expanded(
@@ -195,7 +199,6 @@ class _DiaryPageState extends State<DiaryPage> {
                 ),
               ),
             ),
-
           // 녹음 안내 메시지 박스
           Expanded(
             child: Center(
@@ -216,13 +219,21 @@ class _DiaryPageState extends State<DiaryPage> {
               ),
             ),
           ),
-
-          // 마이크 버튼
+          // 마이크 버튼 (애니메이션 추가)
           Padding(
             padding: const EdgeInsets.only(bottom: 40.0),
-            child: IconButton(
-              icon: const Icon(Icons.mic, size: 50, color: Colors.white),
-              onPressed: _onRecordButtonPressed,
+            child: AnimatedBuilder(
+              animation: _animationController,
+              builder: (context, child) {
+                return IconButton(
+                  icon: Icon(
+                    Icons.mic,
+                    size: 50,
+                    color: _isListening ? Colors.red.withOpacity(_animationController.value) : Colors.white,
+                  ),
+                  onPressed: _onRecordButtonPressed,
+                );
+              },
             ),
           ),
         ],
