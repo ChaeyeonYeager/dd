@@ -182,6 +182,20 @@ class _DiaryPageState extends State<DiaryPage> {
               ],
             ),
           ),
+
+          // 생성된 이미지 표시
+          if (_imageData != null)
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Image.memory(
+                  _imageData!,
+                  fit: BoxFit.contain, // 이미지가 화면에 맞게 조정되도록 설정
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+            ),
+
           // 녹음 안내 메시지 박스
           Expanded(
             child: Center(
@@ -202,19 +216,6 @@ class _DiaryPageState extends State<DiaryPage> {
               ),
             ),
           ),
-          // 생성된 이미지 표시
-          if (_imageData != null)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
-              child: Image.memory(
-                _imageData!,
-                width:
-                    MediaQuery.of(context).size.width * 0.8,
-                height:
-                    MediaQuery.of(context).size.height * 0.3,
-                fit: BoxFit.cover,
-              ),
-            ),
 
           // 마이크 버튼
           Padding(
