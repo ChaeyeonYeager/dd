@@ -3,14 +3,16 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-import 'speech_service.dart'; // SpeechService 불러오기
-import 'image_service.dart'; // ImageService 불러오기
-import 'drawer_menu.dart'; // DrawerMenu 불러오기
+import 'calendar_page.dart'; // CalendarPage 불러오기
+import 'speech_service.dart';
+import 'image_service.dart';
+import 'drawer_menu.dart';
 
 class DiaryPage extends StatefulWidget {
   final DateTime selectedDate;
+  final Color backgroundColor; // 배경 색상 추가
 
-  const DiaryPage({Key? key, required this.selectedDate}) : super(key: key);
+  const DiaryPage({Key? key, required this.selectedDate, required this.backgroundColor}) : super(key: key);
 
   @override
   _DiaryPageState createState() => _DiaryPageState();
@@ -24,7 +26,7 @@ class _DiaryPageState extends State<DiaryPage> {
   final SpeechService _speechService = SpeechService();
   final ImageService _imageService = ImageService();
   String _recognizedText = "";
-  Uint8List? _imageData; // 생성된 이미지 데이터를 위한 변수
+  Uint8List? _imageData;
 
   @override
   void initState() {
@@ -52,14 +54,13 @@ class _DiaryPageState extends State<DiaryPage> {
         });
       });
     } else {
-      _speechService.stopListening(); // 이 부분에서 비동기 처리가 필요 없음
+      _speechService.stopListening();
       setState(() {
         _recordingStatus = "녹음 중지됨. 마이크 버튼을 눌러 다시 시작하세요.";
       });
 
-      // AI에 텍스트를 보내고 이미지 URL을 받아오기
       _imageService.generateImage(_recognizedText).then((imageUrl) {
-        _downloadImage(imageUrl); // 다운로드 함수 호출
+        _downloadImage(imageUrl);
       }).catchError((error) {
         setState(() {
           _recordingStatus = "이미지 생성 중 오류 발생: $error";
@@ -75,7 +76,7 @@ class _DiaryPageState extends State<DiaryPage> {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         setState(() {
-          _imageData = response.bodyBytes; // 이미지 데이터를 Uint8List로 저장
+          _imageData = response.bodyBytes;
         });
       } else {
         throw Exception('이미지 다운로드 실패: ${response.statusCode}');
@@ -92,14 +93,17 @@ class _DiaryPageState extends State<DiaryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: const Color(0xFF8B4513),
+      backgroundColor: widget.backgroundColor, // 전달받은 배경 색상 사용
       appBar: AppBar(
-        backgroundColor: const Color(0xFF8B4513),
+        backgroundColor: widget.backgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.white),
+          icon: const Icon(Icons.home, color: Colors.white),
           onPressed: () {
-            _scaffoldKey.currentState!.openDrawer();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CalendarPage()),
+            );
           },
         ),
         actions: [
@@ -203,11 +207,11 @@ class _DiaryPageState extends State<DiaryPage> {
             Padding(
               padding: const EdgeInsets.only(bottom: 20.0),
               child: Image.memory(
-                _imageData!, // 메모리에서 이미지 표시
+                _imageData!,
                 width:
-                    MediaQuery.of(context).size.width * 0.8, // 화면 너비의 80%로 설정
+                    MediaQuery.of(context).size.width * 0.8,
                 height:
-                    MediaQuery.of(context).size.height * 0.3, // 화면 높이의 30%로 설정
+                    MediaQuery.of(context).size.height * 0.3,
                 fit: BoxFit.cover,
               ),
             ),
@@ -217,7 +221,7 @@ class _DiaryPageState extends State<DiaryPage> {
             padding: const EdgeInsets.only(bottom: 40.0),
             child: IconButton(
               icon: const Icon(Icons.mic, size: 50, color: Colors.white),
-              onPressed: _onRecordButtonPressed, // 버튼 클릭 시 녹음 시작
+              onPressed: _onRecordButtonPressed,
             ),
           ),
         ],

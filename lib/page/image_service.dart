@@ -1,27 +1,61 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart'; // dotenv 패키지 추가
 
 class ImageService {
-  Future<String?> generateImage(String prompt) async {
-    // .env 파일에서 API 키 가져오기
+  Future<String> translateToEnglish(String koreanText) async {
     final response = await http.post(
       Uri.parse(
-          'https://api.openai.com/v1/images/generations'), // OpenAI DALL-E API 엔드포인트
+          'https://translation.googleapis.com/language/translate/v2?key=AIzaSyAgrjR9nFqQ2puWX124xsUw7XZmZY0rnys'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer (edit here)', // 환경 변수에서 API 키 사용
       },
-      body: jsonEncode({'prompt': prompt}),
+      body: jsonEncode({
+        'q': koreanText,
+        'source': 'ko',
+        'target': 'en',
+        'format': 'text',
+      }),
     );
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      String imageUrl = data['data'][0]['url']; // 응답에서 이미지 URL을 가져오기
-      print('Generated Image URL: $imageUrl'); // URL을 터미널에 출력
-      return imageUrl; // 이미지 URL 반환
+      return data['data']['translations'][0]['translatedText'];
     } else {
-      print('실패!!');
-      print('API 응답: ${response.body}'); // 실패 시 응답 내용 출력
+      print('번역 실패: ${response.body}');
+      throw Exception('Failed to translate text: ${response.body}');
+    }
+  }
+
+  Future<String> refinePrompt(String koreanPrompt) async {
+    String englishPrompt = await translateToEnglish(koreanPrompt);
+    return "This image should depict " +
+        englishPrompt +
+        " with a detailed and realistic style. It should include vivid colors and natural lighting. " +
+        "The main object should be at the center of the frame, with a warm and inviting atmosphere.";
+  }
+
+  Future<String?> generateImage(String prompt) async {
+    String refinedPrompt = await refinePrompt(prompt);
+
+    final response = await http.post(
+      Uri.parse('https://api.openai.com/v1/images/generations'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization':
+            'Bearer (edit here)',
+      },
+      body: jsonEncode({'prompt': refinedPrompt}),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      String imageUrl = data['data'][0]['url'];
+      print('Generated Image URL: $imageUrl');
+      return imageUrl;
+    } else {
+      print('이미지 생성 실패!!');
+      print('API 응답: ${response.body}');
       throw Exception('Failed to generate image: ${response.body}');
     }
   }

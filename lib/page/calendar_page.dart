@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'diary_page.dart';
-import 'drawer_menu.dart'; // 사이드바 import
+import 'mood_selector.dart'; // 수정된 부분
+import 'drawer_menu.dart';
 
 class CalendarPage extends StatefulWidget {
   @override
@@ -16,7 +16,7 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey, // Scaffold 키 설정
+      key: _scaffoldKey,
       backgroundColor: const Color(0xFF6200EE),
       appBar: AppBar(
         backgroundColor: const Color(0xFF6200EE),
@@ -42,7 +42,7 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
         ),
       ),
-      drawer: DrawerMenu(), // 분리된 사이드바 파일을 사용
+      drawer: DrawerMenu(),
       body: Column(
         children: [
           const SizedBox(height: 20),
@@ -77,8 +77,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        DiaryPage(selectedDate: _selectedDay!),
+                    builder: (context) => MoodSelector(selectedDate: _selectedDay!), // 수정된 부분
                   ),
                 );
               },
