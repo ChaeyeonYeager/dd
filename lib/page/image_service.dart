@@ -5,8 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart'; // dotenv 패키지 추가
 class ImageService {
   Future<String> translateToEnglish(String koreanText) async {
     final response = await http.post(
-      Uri.parse(
-          'https://translation.googleapis.com/language/translate/v2?key=AIzaSyAgrjR9nFqQ2puWX124xsUw7XZmZY0rnys'),
+      Uri.parse('(edit here)'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -31,8 +30,8 @@ class ImageService {
     String englishPrompt = await translateToEnglish(koreanPrompt);
     return "This image should depict " +
         englishPrompt +
-        " with a detailed and realistic style. It should include vivid colors and natural lighting. " +
-        "The main object should be at the center of the frame, with a warm and inviting atmosphere.";
+        " with a hand-drawn style, resembling a sketch or illustration. It should include soft, pastel colors and have a slightly rough texture. " +
+        "The lines should be gentle and somewhat imperfect, creating a cozy and charming atmosphere. The main object should be at the center of the frame, giving it a warm and inviting feel.";
   }
 
   Future<String?> generateImage(String prompt) async {
@@ -42,8 +41,7 @@ class ImageService {
       Uri.parse('https://api.openai.com/v1/images/generations'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization':
-            'Bearer (edit here)',
+        'Authorization': 'Bearer (edit here)',
       },
       body: jsonEncode({'prompt': refinedPrompt}),
     );

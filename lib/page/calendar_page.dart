@@ -77,7 +77,8 @@ class _CalendarPageState extends State<CalendarPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MoodSelector(selectedDate: _selectedDay!), // 수정된 부분
+                    builder: (context) =>
+                        MoodSelector(selectedDate: _selectedDay!), // 수정된 부분
                   ),
                 );
               },
