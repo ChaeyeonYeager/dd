@@ -42,8 +42,7 @@ class ImageService {
       Uri.parse('https://api.openai.com/v1/images/generations'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization':
-            'Bearer (edit here)',
+        'Authorization': 'Bearer (edit here)',
       },
       body: jsonEncode({'prompt': refinedPrompt}),
     );

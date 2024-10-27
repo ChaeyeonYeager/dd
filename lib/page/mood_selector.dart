@@ -12,15 +12,40 @@ class MoodSelector extends StatefulWidget {
 
 class _MoodSelectorState extends State<MoodSelector> {
   final List<Map<String, dynamic>> moods = [
-    {'label': 'SAD', 'imagePath': 'assets/sad.jpg', 'color': Colors.blueGrey},
-    {'label': 'ANGRY', 'imagePath': 'assets/angry.jpg', 'color': Colors.red},
-    {'label': 'CONFIDENCE', 'imagePath': 'assets/confidence.jpg', 'color': Colors.green},
-    {'label': 'EXCITED', 'imagePath': 'assets/excited.jpg', 'color': Colors.orange},
-    {'label': 'ANXIETY', 'imagePath': 'assets/anxiety.jpg', 'color': Colors.purple},
-    {'label': 'HAPPY', 'imagePath': 'assets/happy.jpg', 'color': Colors.yellow},
+    {
+      'label': 'SAD',
+      'imagePath': 'assets/mood/sad.jpg',
+      'color': Colors.blueGrey
+    },
+    {
+      'label': 'ANGRY',
+      'imagePath': 'assets/mood/angry.jpg',
+      'color': Colors.red
+    },
+    {
+      'label': 'CONFIDENCE',
+      'imagePath': 'assets/mood/confidence.jpg',
+      'color': Colors.green
+    },
+    {
+      'label': 'EXCITED',
+      'imagePath': 'assets/mood/excited.jpg',
+      'color': Colors.orange
+    },
+    {
+      'label': 'ANXIETY',
+      'imagePath': 'assets/mood/anxiety.jpg',
+      'color': Colors.purple
+    },
+    {
+      'label': 'HAPPY',
+      'imagePath': 'assets/mood/happy.jpg',
+      'color': Colors.yellow
+    },
   ];
 
-  Future<void> _showSplashAndNavigate(String label, String imagePath, Color color) async {
+  Future<void> _showSplashAndNavigate(
+      String label, String imagePath, Color color) async {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -90,7 +115,10 @@ class _MoodSelectorState extends State<MoodSelector> {
             ),
             Text(
               "MOOD",
-              style: TextStyle(fontSize: 36, color: Colors.purple, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 36,
+                  color: Colors.purple,
+                  fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 20),
             Expanded(

@@ -12,13 +12,16 @@ class DiaryPage extends StatefulWidget {
   final DateTime selectedDate;
   final Color backgroundColor; // 배경 색상 추가
 
-  const DiaryPage({Key? key, required this.selectedDate, required this.backgroundColor}) : super(key: key);
+  const DiaryPage(
+      {Key? key, required this.selectedDate, required this.backgroundColor})
+      : super(key: key);
 
   @override
   _DiaryPageState createState() => _DiaryPageState();
 }
 
-class _DiaryPageState extends State<DiaryPage> with SingleTickerProviderStateMixin {
+class _DiaryPageState extends State<DiaryPage>
+    with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late DateTime _selectedDate;
   String _recordingStatus = "마이크 버튼을 누르고 녹음을 시작하세요.";
@@ -143,12 +146,16 @@ class _DiaryPageState extends State<DiaryPage> with SingleTickerProviderStateMix
                   child: Column(
                     children: [
                       Text(
-                        DateFormat('MM').format(_selectedDate.add(const Duration(days: -1))),
-                        style: TextStyle(color: Colors.brown[200], fontSize: 20),
+                        DateFormat('MM').format(
+                            _selectedDate.add(const Duration(days: -1))),
+                        style:
+                            TextStyle(color: Colors.brown[200], fontSize: 20),
                       ),
                       Text(
-                        DateFormat('dd').format(_selectedDate.add(const Duration(days: -1))),
-                        style: TextStyle(color: Colors.brown[200], fontSize: 30),
+                        DateFormat('dd').format(
+                            _selectedDate.add(const Duration(days: -1))),
+                        style:
+                            TextStyle(color: Colors.brown[200], fontSize: 30),
                       ),
                     ],
                   ),
@@ -157,7 +164,8 @@ class _DiaryPageState extends State<DiaryPage> with SingleTickerProviderStateMix
                   children: [
                     IconButton(
                       onPressed: () => _changeDate(-1),
-                      icon: const Icon(Icons.arrow_left, color: Colors.white, size: 30),
+                      icon: const Icon(Icons.arrow_left,
+                          color: Colors.white, size: 30),
                     ),
                     Text(
                       DateFormat('MM dd').format(_selectedDate),
@@ -165,7 +173,8 @@ class _DiaryPageState extends State<DiaryPage> with SingleTickerProviderStateMix
                     ),
                     IconButton(
                       onPressed: () => _changeDate(1),
-                      icon: const Icon(Icons.arrow_right, color: Colors.white, size: 30),
+                      icon: const Icon(Icons.arrow_right,
+                          color: Colors.white, size: 30),
                     ),
                   ],
                 ),
@@ -174,12 +183,16 @@ class _DiaryPageState extends State<DiaryPage> with SingleTickerProviderStateMix
                   child: Column(
                     children: [
                       Text(
-                        DateFormat('MM').format(_selectedDate.add(const Duration(days: 1))),
-                        style: TextStyle(color: Colors.brown[200], fontSize: 20),
+                        DateFormat('MM')
+                            .format(_selectedDate.add(const Duration(days: 1))),
+                        style:
+                            TextStyle(color: Colors.brown[200], fontSize: 20),
                       ),
                       Text(
-                        DateFormat('dd').format(_selectedDate.add(const Duration(days: 1))),
-                        style: TextStyle(color: Colors.brown[200], fontSize: 30),
+                        DateFormat('dd')
+                            .format(_selectedDate.add(const Duration(days: 1))),
+                        style:
+                            TextStyle(color: Colors.brown[200], fontSize: 30),
                       ),
                     ],
                   ),
@@ -229,7 +242,9 @@ class _DiaryPageState extends State<DiaryPage> with SingleTickerProviderStateMix
                   icon: Icon(
                     Icons.mic,
                     size: 50,
-                    color: _isListening ? Colors.red.withOpacity(_animationController.value) : Colors.white,
+                    color: _isListening
+                        ? Colors.red.withOpacity(_animationController.value)
+                        : Colors.white,
                   ),
                   onPressed: _onRecordButtonPressed,
                 );
