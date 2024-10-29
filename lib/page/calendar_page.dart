@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'mood_selector.dart'; // 수정된 부분
+import 'mood_selector.dart';
 import 'drawer_menu.dart';
+import 'diary_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CalendarPage extends StatefulWidget {
   @override
@@ -12,6 +14,7 @@ class _CalendarPageState extends State<CalendarPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -68,19 +71,33 @@ class _CalendarPageState extends State<CalendarPage> {
               selectedDayPredicate: (day) {
                 return isSameDay(_selectedDay, day);
               },
-              onDaySelected: (selectedDay, focusedDay) {
+              onDaySelected: (selectedDay, focusedDay) async {
                 setState(() {
                   _selectedDay = selectedDay;
                   _focusedDay = focusedDay;
                 });
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        MoodSelector(selectedDate: _selectedDay!), // 수정된 부분
-                  ),
-                );
+                final hasDiaryEntry = await _checkDiaryEntry(selectedDay);
+
+                if (hasDiaryEntry) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DiaryPage(
+                        selectedDate: selectedDay,
+                        backgroundColor: Colors.white,
+                      ),
+                    ),
+                  );
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          MoodSelector(selectedDate: selectedDay),
+                    ),
+                  );
+                }
               },
               onPageChanged: (focusedDay) {
                 setState(() {
@@ -126,5 +143,13 @@ class _CalendarPageState extends State<CalendarPage> {
         ],
       ),
     );
+  }
+
+  Future<bool> _checkDiaryEntry(DateTime date) async {
+    final querySnapshot = await _firestore
+        .collection('diary_entries')
+        .where('date', isEqualTo: date.toIso8601String())
+        .get();
+    return querySnapshot.docs.isNotEmpty;
   }
 }
