@@ -51,8 +51,8 @@ class _DiaryPageState extends State<DiaryPage> {
   void _changeDate(int days) {
     setState(() {
       _selectedDate = _selectedDate.add(Duration(days: days));
-      _isLoading = true;
-      _loadDiaryEntry();
+      _isLoading = true; // 데이터 로드 중임을 나타내는 상태 업데이트
+      _loadDiaryEntry(); // 새 날짜에 대한 일기 항목 로드
     });
   }
 
@@ -179,6 +179,8 @@ class _DiaryPageState extends State<DiaryPage> {
         });
       } else {
         setState(() {
+          _recognizedText = ""; // 텍스트 초기화
+          _imageData = null; // 이미지 초기화
           _recordingStatus = "새로운 일기를 작성하세요.";
         });
       }

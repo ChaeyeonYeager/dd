@@ -16,7 +16,7 @@ class _MoodSelectorState extends State<MoodSelector> {
     {'label': 'ANGRY', 'imagePath': 'assets/angry.jpg', 'color': Color(0xFF850001)},
     {'label': 'CONFIDENCE', 'imagePath': 'assets/confidence.jpg', 'color': Color(0xFF4C2D00)},
     {'label': 'EXCITED', 'imagePath': 'assets/excited.jpg', 'color': Color(0xFF8D002B)},
-    {'label': 'ANXIETY', 'imagePath': 'assets/anxiety.jpg', 'color': Colors.purple}, // 유지
+    {'label': 'ANXIETY', 'imagePath': 'assets/anxiety.jpg', 'color': Color(0xFF190E52)}, // 유지
     {'label': 'HAPPY', 'imagePath': 'assets/happy.jpg', 'color': Color(0xFF7C2901)},
   ];
 

@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'my_button.dart';
 import 'my_textfield.dart';
 import 'square_title.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'login_page.dart'; // 등록 페이지 임포트
+import 'login_or_register_page.dart'; // 등록 페이지 임포트
 
 class RegisterPage extends StatefulWidget {
   final Function()? onTap;
@@ -13,12 +16,12 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  //text editing controllers
+  // text editing controllers
   final emailController = TextEditingController();
   final paswswordController = TextEditingController();
   final confrimpaswswordController = TextEditingController();
 
-  //sign user up method
+  // sign user up method
   void signUserUp() async {
     // show loading circle
     showDialog(
@@ -31,21 +34,21 @@ class _RegisterPageState extends State<RegisterPage> {
     );
     // try creating the user
     try {
-      //check if password is confirmed
+      // check if password is confirmed
       if (paswswordController.text == confrimpaswswordController.text) {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text,
           password: paswswordController.text,
         );
       } else {
-        // show error messge, passwords don't match
+        // show error message, passwords don't match
         showErrorMessage("Passwords don't match!");
       }
       // pop the loading circle
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       // pop the loading circle
-      Navigator.pop(context); //이거쓰면 에러뜨는듯 ㅠㅠ
+      Navigator.pop(context);
       // show error message
       showErrorMessage(e.code);
     }
@@ -72,7 +75,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: const Color(0xFF6200EE),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -81,35 +84,39 @@ class _RegisterPageState extends State<RegisterPage> {
               children: [
                 const SizedBox(height: 20),
 
-                // logo
-                const Icon(
-                  Icons.lock,
-                  size: 100,
+                // 로고
+                const CircleAvatar(
+                  radius: 50,
+                  backgroundColor: Colors.white,
+                  child: Text(
+                    'D',
+                    style: TextStyle(fontSize: 40, color: Colors.amber),
+                  ),
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 50),
 
                 // let's create an account for you
                 Text(
                   'Let\'s create an account for you!',
                   style: TextStyle(
-                    color: Colors.grey[700],
+                    color: Colors.white70,
                     fontSize: 16,
                   ),
                 ),
 
                 const SizedBox(height: 25),
 
-                // email textfield
+                // 이메일 입력 필드
                 MyTextField(
                   controller: emailController,
-                  hintText: 'Email',
+                  hintText: 'E-Mail',
                   obscureText: false,
                 ),
 
                 const SizedBox(height: 10),
 
-                // password textfield
+                // 패스워드 입력 필드
                 MyTextField(
                   controller: paswswordController,
                   hintText: 'Password',
@@ -118,14 +125,12 @@ class _RegisterPageState extends State<RegisterPage> {
 
                 const SizedBox(height: 10),
 
-                // confirm password textfield
+                // 패스워드 확인 입력 필드
                 MyTextField(
                   controller: confrimpaswswordController,
-                  hintText: 'Confirm Password',
+                  hintText: 'Password Confirm',
                   obscureText: true,
                 ),
-
-                const SizedBox(height: 25),
 
                 // sign up button
                 My_Button(
@@ -133,75 +138,26 @@ class _RegisterPageState extends State<RegisterPage> {
                   onTap: signUserUp,
                 ),
 
-                const SizedBox(height: 50),
+                const SizedBox(height: 20),
 
-                // or continue with
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Divider(
-                          thickness: 0.5,
-                          color: Colors.grey[400],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Text(
-                          'Or continue with',
-                          style: TextStyle(color: Colors.grey[700]),
-                        ),
-                      ),
-                      Expanded(
-                        child: Divider(
-                          thickness: 0.5,
-                          color: Colors.grey[400],
-                        ),
-                      ),
-                    ],
+                // back button (로고 아이콘으로 변경)
+                IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
                   ),
+                  onPressed: () {
+                    // LoginOrRegisterPage로 돌아가기
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LoginOrRegisterPage(),
+                      ),
+                    );
+                  },
                 ),
 
                 const SizedBox(height: 50),
-
-                // google + apple sign in buttons
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    // google button
-                    SquareTile(imagePath: 'lib/images/google.png'),
-
-                    SizedBox(width: 25),
-
-                    // apple button
-                    SquareTile(imagePath: 'lib/images/apple.png'),
-                  ],
-                ),
-
-                const SizedBox(height: 30),
-
-                // not a memeber? register now
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Already have an account?',
-                      style: TextStyle(color: Colors.grey[700]),
-                    ),
-                    const SizedBox(width: 4),
-                    GestureDetector(
-                      onTap: widget.onTap,
-                      child: const Text(
-                        'Login now',
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                )
               ],
             ),
           ),
