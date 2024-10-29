@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:my_app/auth_page.dart';
 
@@ -7,61 +8,36 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  final List<String> images = [
-    'assets/splash_0.png',
-    'assets/splash_1.png',
-    'assets/splash_2.png',
-    'assets/splash_3.png',
-    'assets/splash_4.png',
-    'assets/splash_5.png',
-    'assets/splash_6.png',
-    'assets/splash_7.png',
-    'assets/splash_8.png'
-  ];
-
-  // 각 이미지를 보여줄 수 있는 상태 리스트
-  List<bool> _visibleImages = List.generate(9, (index) => false);
-
   @override
   void initState() {
     super.initState();
-    _startAnimation();
+    _navigateToNextPage();
   }
 
-  void _startAnimation() {
-    for (int i = 0; i < images.length; i++) {
-      Future.delayed(Duration(seconds: 1) * i, () {
-        setState(() {
-          _visibleImages[i] = true; // 현재 인덱스의 이미지를 보이게 설정
-        });
-
-        // 마지막 이미지가 보인 후, auth_page로 이동
-        if (i == images.length - 1) {
-          Future.delayed(Duration(seconds: 1), () {
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => AuthPage()));
-          });
-        }
-      });
-    }
+  void _navigateToNextPage() {
+    // 4.81초 후에 다음 페이지로 전환
+    Future.delayed(Duration(seconds: 4, milliseconds: 810), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => AuthPage()),
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    // 화면의 사이즈 정보를 가져오기 위해 MediaQuery 사용
+    final screenSize = MediaQuery.of(context).size;
+
     return Scaffold(
-      body: Stack(
-        children: images.asMap().entries.map((entry) {
-          int index = entry.key;
-          String imagePath = entry.value;
-          return AnimatedOpacity(
-            opacity: _visibleImages[index] ? 1.0 : 0.0, // 보일 때는 1.0, 아닐 때는 0.0
-            duration: Duration(milliseconds: 500), // 애니메이션 시간
-            child: Image.asset(
-              imagePath,
-              fit: BoxFit.cover,
-            ),
-          );
-        }).toList(),
+      body: Center(
+        child: Image.asset(
+          'assets/splash.gif', // GIF 파일 경로
+          width: screenSize.width, // 화면 너비에 맞게 설정
+          height: screenSize.height, // 화면 높이에 맞게 설정
+          fit: BoxFit.cover,
+          //fit: BoxFit.contain, // 비율 유지하며 화면에 맞게 조절
+        ),
       ),
     );
   }
