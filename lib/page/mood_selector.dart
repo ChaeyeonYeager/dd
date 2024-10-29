@@ -12,12 +12,12 @@ class MoodSelector extends StatefulWidget {
 
 class _MoodSelectorState extends State<MoodSelector> {
   final List<Map<String, dynamic>> moods = [
-    {'label': 'SAD', 'imagePath': 'assets/sad.jpg', 'color': Colors.blueGrey},
-    {'label': 'ANGRY', 'imagePath': 'assets/angry.jpg', 'color': Colors.red},
-    {'label': 'CONFIDENCE', 'imagePath': 'assets/confidence.jpg', 'color': Colors.green},
-    {'label': 'EXCITED', 'imagePath': 'assets/excited.jpg', 'color': Colors.orange},
-    {'label': 'ANXIETY', 'imagePath': 'assets/anxiety.jpg', 'color': Colors.purple},
-    {'label': 'HAPPY', 'imagePath': 'assets/happy.jpg', 'color': Colors.yellow},
+    {'label': 'SAD', 'imagePath': 'assets/sad.jpg', 'color': Color(0xFF16314F)},
+    {'label': 'ANGRY', 'imagePath': 'assets/angry.jpg', 'color': Color(0xFF850001)},
+    {'label': 'CONFIDENCE', 'imagePath': 'assets/confidence.jpg', 'color': Color(0xFF4C2D00)},
+    {'label': 'EXCITED', 'imagePath': 'assets/excited.jpg', 'color': Color(0xFF8D002B)},
+    {'label': 'ANXIETY', 'imagePath': 'assets/anxiety.jpg', 'color': Colors.purple}, // 유지
+    {'label': 'HAPPY', 'imagePath': 'assets/happy.jpg', 'color': Color(0xFF7C2901)},
   ];
 
   Future<void> _showSplashAndNavigate(String label, String imagePath, Color color) async {
