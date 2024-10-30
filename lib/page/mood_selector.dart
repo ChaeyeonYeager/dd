@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart'; // 날짜 포맷을 위한 intl 패키지 임포트
 import 'diary_page.dart';
 
 class MoodSelector extends StatefulWidget {
@@ -36,7 +37,7 @@ class _MoodSelectorState extends State<MoodSelector> {
       'label': 'ANXIETY',
       'imagePath': 'assets/mood/anxiety.jpg',
       'color': Color(0xFF190E52)
-    }, // 유지
+    },
     {
       'label': 'HAPPY',
       'imagePath': 'assets/mood/happy.jpg',
@@ -91,6 +92,10 @@ class _MoodSelectorState extends State<MoodSelector> {
 
   @override
   Widget build(BuildContext context) {
+    // 선택한 날짜를 'yyyy-MM-dd' 형식으로 표시
+    String formattedDate =
+        DateFormat('MMMM dd').format(widget.selectedDate) + "'s";
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -102,7 +107,7 @@ class _MoodSelectorState extends State<MoodSelector> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Today's",
+              formattedDate, // 선택된 날짜 표시
               style: TextStyle(fontSize: 28, color: Colors.purple),
             ),
             Text(

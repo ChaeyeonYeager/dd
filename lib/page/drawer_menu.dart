@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:my_app/login_or_register_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DrawerMenu extends StatefulWidget {
   @override
@@ -10,24 +11,35 @@ class DrawerMenu extends StatefulWidget {
 class _DrawerMenuState extends State<DrawerMenu> {
   String? displayName;
   String? email;
+  String? uid;
 
   @override
   void initState() {
     super.initState();
+    _loadUserInfo();
+  }
+
+  Future<void> _loadUserInfo() async {
     // Firebase에서 현재 사용자 정보 가져오기
     final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      email = user.email;
+      uid = user.uid;
+    }
+
+    // SharedPreferences에서 사용자별 이름 가져오기
+    final prefs = await SharedPreferences.getInstance();
     setState(() {
-      email = user?.email;
-      displayName = email?.split('@').first ?? 'User';
+      displayName = prefs.getString('displayName_$uid') ??
+          email?.split('@').first ??
+          'User';
     });
   }
 
-  void _logout() async {
-    await FirebaseAuth.instance.signOut();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => LoginOrRegisterPage()), // 수정
-    );
+  Future<void> _saveDisplayName(String name) async {
+    // SharedPreferences에 사용자별 이름 저장
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('displayName_$uid', name);
   }
 
   void _editDisplayName() {
@@ -44,10 +56,15 @@ class _DrawerMenuState extends State<DrawerMenu> {
           ),
           actions: [
             TextButton(
-              onPressed: () {
+              onPressed: () async {
+                String newName = nameController.text;
+
+                // 로컬 상태와 SharedPreferences에 이름 저장
                 setState(() {
-                  displayName = nameController.text;
+                  displayName = newName;
                 });
+                await _saveDisplayName(newName);
+
                 Navigator.pop(context);
               },
               child: Text('Save'),
@@ -55,6 +72,14 @@ class _DrawerMenuState extends State<DrawerMenu> {
           ],
         );
       },
+    );
+  }
+
+  void _logout() async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginOrRegisterPage()),
     );
   }
 

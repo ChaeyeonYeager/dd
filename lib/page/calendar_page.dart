@@ -10,14 +10,27 @@ class CalendarPage extends StatefulWidget {
   _CalendarPageState createState() => _CalendarPageState();
 }
 
+class LoadingScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Image.asset('lib/images/loading.png'), // 로딩 이미지
+    );
+  }
+}
+
 class _CalendarPageState extends State<CalendarPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return LoadingScreen(); // 로딩 화면 위젯
+    }
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: const Color(0xFF6200EE),
@@ -69,6 +82,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 setState(() {
                   _selectedDay = selectedDay;
                   _focusedDay = focusedDay;
+                  _isLoading = true;
                 });
 
                 final hasDiaryEntry = await _checkDiaryEntry(selectedDay);
@@ -96,6 +110,7 @@ class _CalendarPageState extends State<CalendarPage> {
               onPageChanged: (focusedDay) {
                 setState(() {
                   _focusedDay = focusedDay;
+                  _isLoading = false;
                 });
               },
               calendarStyle: CalendarStyle(

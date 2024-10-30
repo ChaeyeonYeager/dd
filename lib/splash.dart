@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:my_app/auth_page.dart';
+import 'page/loading_sceen.dart';
 
 // 전체적으로 수정
 
@@ -21,7 +22,9 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(Duration(seconds: 4, milliseconds: 810), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => AuthPage()),
+        MaterialPageRoute(
+            builder: (context) =>
+                LoadingScreen()), //Authscreen() -> LoadingScreen()
       );
     });
   }

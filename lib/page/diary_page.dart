@@ -24,11 +24,10 @@ class DiaryPage extends StatefulWidget {
   _DiaryPageState createState() => _DiaryPageState();
 }
 
-class _DiaryPageState extends State<DiaryPage>
-    with SingleTickerProviderStateMixin {
+class _DiaryPageState extends State<DiaryPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late DateTime _selectedDate;
-  String _recordingStatus = "마이크 버튼을 누르고 녹음을 시작하세요.";
+  String _recordingStatus = "마이크 버튼을 누르고 녹음을 시작하세요";
   bool _isListening = false;
   final SpeechService _speechService = SpeechService();
   final ImageService _imageService;
@@ -62,6 +61,13 @@ class _DiaryPageState extends State<DiaryPage>
   }
 
   void _changeDate(int days) async {
+    // 로딩 화면으로 전환
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => LoadingScreen()), // LoadingScreen으로 이동
+    );
+
     setState(() {
       _selectedDate = _selectedDate.add(Duration(days: days));
       _isLoading = true; // 데이터 로드 중임을 표시
@@ -75,6 +81,7 @@ class _DiaryPageState extends State<DiaryPage>
       await _loadDiaryEntry();
     } else {
       // 일기가 없으면 MoodSelector 페이지로 이동
+      Navigator.pop(context); // 로딩 화면 닫기
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -82,6 +89,9 @@ class _DiaryPageState extends State<DiaryPage>
         ),
       );
     }
+
+    // 로딩 화면 닫기
+    Navigator.pop(context); // 로딩 화면 닫기
   }
 
   void _onRecordButtonPressed() {
@@ -195,7 +205,7 @@ class _DiaryPageState extends State<DiaryPage>
 
     setState(() {
       isSaving = true;
-      _recordingStatus = "저장중...";
+      _recordingStatus = "저장완료";
     });
 
     try {
