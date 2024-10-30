@@ -124,160 +124,163 @@ class _LoginPageState extends State<LoginPage> {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 50),
-
-                // logo
-                const CircleAvatar(
-                  radius: 50,
-                  backgroundColor: Colors.white,
-                  child: Text(
-                    'D',
-                    style: TextStyle(fontSize: 40, color: Colors.amber),
-                  ),
-                ),
-
-                const SizedBox(height: 50),
-
-                // welcome back, you've been missed!
-                Text(
-                  'Welcome back you\'ve been missed!',
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 16,
-                  ),
-                ),
-
-                const SizedBox(height: 25),
-
-                TextField(
-                  controller: emailController,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: 'E-Mail',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide.none,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 28.0), // 좌우 여백 추가
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 50),
+              
+                  // logo
+                  const CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.white,
+                    child: Text(
+                      'D',
+                      style: TextStyle(fontSize: 40, color: Colors.amber),
                     ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                // 비밀번호 입력 필드
-                TextField(
-                  controller: passwordController, // 'password' 스펠링 수정
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: 'Password',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide.none,
+              
+                  const SizedBox(height: 50),
+              
+                  // welcome back, you've been missed!
+                  Text(
+                    'Welcome back you\'ve been missed!',
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 16,
                     ),
                   ),
-                ),
-                const SizedBox(height: 24),
-
-                // forgot password
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+              
+                  const SizedBox(height: 25),
+              
+                  TextField(
+                    controller: emailController,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: 'E-Mail',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  // 비밀번호 입력 필드
+                  TextField(
+                    controller: passwordController, // 'password' 스펠링 수정
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: 'Password',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+              
+                  // forgot password
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          'Forgot Password?',
+                          style: TextStyle(color: Colors.white70),
+                        ),
+                      ],
+                    ),
+                  ),
+              
+                  const SizedBox(height: 25),
+              
+                  // sign in button
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: signUserIn,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                      ),
+                      child: const Text(
+                        'SIGN IN',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  // 'Or continue with' 구분선
+                  Row(
                     children: [
-                      Text(
-                        'Forgot Password?',
-                        style: TextStyle(color: Colors.white70),
+                      Expanded(
+                        child: Divider(
+                          color: Colors.white54,
+                          thickness: 1,
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text(
+                          'Or continue with',
+                          style: TextStyle(color: Colors.white54),
+                        ),
+                      ),
+                      Expanded(
+                        child: Divider(
+                          color: Colors.white54,
+                          thickness: 1,
+                        ),
                       ),
                     ],
                   ),
-                ),
-
-                const SizedBox(height: 25),
-
-                // sign in button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: signUserIn,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                  const SizedBox(height: 16),
+              
+                  // google sign in button
+                  GestureDetector(
+                    onTap: signInWithGoogle,
+                    child: const CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 24,
+                      child: Image(
+                        image: AssetImage('lib/images/google.png'), // 구글 로고 이미지
+                        height: 24,
+                        width: 24,
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    child: const Text(
-                      'SIGN IN',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                // 'Or continue with' 구분선
-                Row(
-                  children: [
-                    Expanded(
-                      child: Divider(
-                        color: Colors.white54,
-                        thickness: 1,
+                  const SizedBox(height: 30),
+              
+                  // not a member? register now
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Not a member?',
+                        style: TextStyle(color: Colors.white70),
                       ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(
-                        'Or continue with',
-                        style: TextStyle(color: Colors.white54),
-                      ),
-                    ),
-                    Expanded(
-                      child: Divider(
-                        color: Colors.white54,
-                        thickness: 1,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-
-                // google sign in button
-                GestureDetector(
-                  onTap: signInWithGoogle,
-                  child: const CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 24,
-                    child: Image(
-                      image: AssetImage('lib/images/google.png'), // 구글 로고 이미지
-                      height: 24,
-                      width: 24,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 30),
-
-                // not a member? register now
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Not a member?',
-                      style: TextStyle(color: Colors.white70),
-                    ),
-                    GestureDetector(
-                      onTap: widget.onTap, // 등록 페이지로 이동
-                      child: const Text(
-                        ' Register now',
-                        style: TextStyle(
-                          color: Colors.redAccent,
-                          fontWeight: FontWeight.bold,
+                      GestureDetector(
+                        onTap: widget.onTap, // 등록 페이지로 이동
+                        child: const Text(
+                          ' Register now',
+                          style: TextStyle(
+                            color: Colors.redAccent,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
