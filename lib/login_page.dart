@@ -134,11 +134,7 @@ class _LoginPageState extends State<LoginPage> {
                   // logo
                   const CircleAvatar(
                     radius: 50,
-                    backgroundColor: Colors.white,
-                    child: Text(
-                      'D',
-                      style: TextStyle(fontSize: 40, color: Colors.amber),
-                    ),
+                    backgroundImage: AssetImage('assets/logo.jpg'),
                   ),
 
                   const SizedBox(height: 50),

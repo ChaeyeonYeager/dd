@@ -30,9 +30,11 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Image.asset(
-          'assets/splash.gif', // GIF 파일 경로
-          fit: BoxFit.cover,
+        child: SizedBox.expand(
+          child: Image.asset(
+            'assets/splash.gif', // GIF 파일 경로
+            fit: BoxFit.cover,
+          ),
         ),
       ),
     );
