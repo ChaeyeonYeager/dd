@@ -4,19 +4,11 @@ import 'mood_selector.dart';
 import 'drawer_menu.dart';
 import 'diary_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'loading_sceen.dart';
 
 class CalendarPage extends StatefulWidget {
   @override
   _CalendarPageState createState() => _CalendarPageState();
-}
-
-class LoadingScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Image.asset('lib/images/loading.png'), // 로딩 이미지
-    );
-  }
 }
 
 class _CalendarPageState extends State<CalendarPage> {

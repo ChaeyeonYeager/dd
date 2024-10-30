@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/auth_page.dart';
+import 'calendar_page.dart';
+import 'diary_page.dart';
 
 class LoadingScreen extends StatelessWidget {
   @override

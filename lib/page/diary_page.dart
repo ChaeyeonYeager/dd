@@ -11,6 +11,7 @@ import 'image_service.dart';
 import 'mood_selector.dart';
 import 'drawer_menu.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'loading_sceen.dart';
 
 class DiaryPage extends StatefulWidget {
   final DateTime selectedDate;
