@@ -28,4 +28,10 @@ class SpeechService {
   void stopListening() {
     _speech.stop();
   }
+
+  // 리소스를 해제하는 함수
+  void dispose() {
+    _speech.stop(); // 현재 음성을 멈추고
+    _speech.cancel(); // 모든 음성 인식 세션을 취소
+  }
 }

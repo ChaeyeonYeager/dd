@@ -15,32 +15,32 @@ class _MoodSelectorState extends State<MoodSelector> {
     {
       'label': 'SAD',
       'imagePath': 'assets/mood/sad.jpg',
-      'color': Colors.blueGrey
+      'color': Color(0xFF16314F)
     },
     {
       'label': 'ANGRY',
       'imagePath': 'assets/mood/angry.jpg',
-      'color': Colors.red
+      'color': Color(0xFF850001)
     },
     {
       'label': 'CONFIDENCE',
       'imagePath': 'assets/mood/confidence.jpg',
-      'color': Colors.green
+      'color': Color(0xFF4C2D00)
     },
     {
       'label': 'EXCITED',
       'imagePath': 'assets/mood/excited.jpg',
-      'color': Colors.orange
+      'color': Color(0xFF8D002B)
     },
     {
       'label': 'ANXIETY',
       'imagePath': 'assets/mood/anxiety.jpg',
-      'color': Colors.purple
-    },
+      'color': Color(0xFF190E52)
+    }, // 유지
     {
       'label': 'HAPPY',
       'imagePath': 'assets/mood/happy.jpg',
-      'color': Colors.yellow
+      'color': Color(0xFF7C2901)
     },
   ];
 
@@ -95,14 +95,6 @@ class _MoodSelectorState extends State<MoodSelector> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         // leading 속성 제거하여 기본 뒤로 가기 버튼 표시
-        actions: [
-          IconButton(
-            icon: Icon(Icons.settings),
-            onPressed: () {
-              print("Settings button pressed");
-            },
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

@@ -1,6 +1,63 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:my_app/login_or_register_page.dart';
 
-class DrawerMenu extends StatelessWidget {
+class DrawerMenu extends StatefulWidget {
+  @override
+  _DrawerMenuState createState() => _DrawerMenuState();
+}
+
+class _DrawerMenuState extends State<DrawerMenu> {
+  String? displayName;
+  String? email;
+
+  @override
+  void initState() {
+    super.initState();
+    // Firebase에서 현재 사용자 정보 가져오기
+    final user = FirebaseAuth.instance.currentUser;
+    setState(() {
+      email = user?.email;
+      displayName = email?.split('@').first ?? 'User';
+    });
+  }
+
+  void _logout() async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginOrRegisterPage()), // 수정
+    );
+  }
+
+  void _editDisplayName() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        final TextEditingController nameController =
+            TextEditingController(text: displayName);
+        return AlertDialog(
+          title: Text('Edit Name'),
+          content: TextField(
+            controller: nameController,
+            decoration: InputDecoration(hintText: 'Enter new name'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  displayName = nameController.text;
+                });
+                Navigator.pop(context);
+              },
+              child: Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -9,14 +66,14 @@ class DrawerMenu extends StatelessWidget {
         children: [
           UserAccountsDrawerHeader(
             decoration: const BoxDecoration(
-              color: Color(0xFF6200EE), // 사이드바 헤더 배경색
+              color: Color(0xFF6200EE),
             ),
-            accountName: const Text(
-              "SONG SAEM",
+            accountName: Text(
+              displayName ?? 'User',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            accountEmail: const Text(
-              "ssongsams@naver.com",
+            accountEmail: Text(
+              email ?? 'No email',
               style: TextStyle(fontSize: 14),
             ),
             currentAccountPicture: const CircleAvatar(
@@ -29,7 +86,7 @@ class DrawerMenu extends StatelessWidget {
             ),
             otherAccountsPictures: [
               GestureDetector(
-                onTap: () {},
+                onTap: _editDisplayName,
                 child: const Text(
                   'Edit',
                   style: TextStyle(color: Colors.white),
@@ -37,29 +94,10 @@ class DrawerMenu extends StatelessWidget {
               ),
             ],
           ),
-          const ListTile(
-            leading: Icon(Icons.question_answer, color: Color(0xFF6200EE)),
-            title: Text('Q&A'),
-          ),
-          const ListTile(
-            leading: Icon(Icons.color_lens, color: Color(0xFF6200EE)),
-            title: Text('Theme'),
-          ),
-          const ListTile(
-            leading: Icon(Icons.question_answer, color: Color(0xFF6200EE)),
-            title: Text('Q&A'),
-          ),
-          const ListTile(
-            leading: Icon(Icons.color_lens, color: Color(0xFF6200EE)),
-            title: Text('Theme'),
-          ),
-          const SizedBox(height: 20),
           const Divider(),
           ListTile(
             title: const Text('LOG OUT', style: TextStyle(color: Colors.grey)),
-            onTap: () {
-              // 로그아웃 기능
-            },
+            onTap: _logout,
           ),
         ],
       ),

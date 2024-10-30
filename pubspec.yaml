@@ -38,6 +38,8 @@ dependencies:
   table_calendar: ^3.0.0
   speech_to_text: ^7.0.0
   flutter_dotenv: ^5.2.1
+  cloud_firestore: ^5.4.4
+  firebase_storage: ^12.3.4
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -64,7 +66,7 @@ flutter:
   assets:
     - lib/images/
     - assets/mood/
-    - assets/splash/
+    - assets/
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
