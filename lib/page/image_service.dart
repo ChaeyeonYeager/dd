@@ -56,8 +56,9 @@ class ImageService {
       Uri.parse('https://api.openai.com/v1/images/generations'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization':
-            'Bearer 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',
+        // !!실행할 때는 주석 풀어야 함!!
+        //'Authorization':
+        //'Bearer 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',
       },
       body: jsonEncode({'prompt': refinedPrompt}),
     );
