@@ -53,7 +53,7 @@ class ImageService {
     String refinedPrompt = await refinePrompt(prompt);
 
     final response = await http.post(
-      Uri.parse('https://api.openai.com/v1/images/generations'),
+      Uri.parse('https://.openai.com/v1/images/generations'),
       headers: {
         'Content-Type': 'application/json',
         // !!실행할 때는 주석 풀어야 함!!
@@ -69,7 +69,7 @@ class ImageService {
       return imageUrl;
     } else {
       print('이미지 생성 실패!!');
-      print('API 응답: ${response.body}');
+      print(' 응답: ${response.body}');
       throw Exception('Failed to generate image: ${response.body}');
     }
   }
