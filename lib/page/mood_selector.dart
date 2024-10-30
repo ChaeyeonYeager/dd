@@ -12,15 +12,16 @@ class MoodSelector extends StatefulWidget {
 
 class _MoodSelectorState extends State<MoodSelector> {
   final List<Map<String, dynamic>> moods = [
-    {'label': 'SAD', 'imagePath': 'assets/sad.jpg', 'color': Color(0xFF16314F)},
-    {'label': 'ANGRY', 'imagePath': 'assets/angry.jpg', 'color': Color(0xFF850001)},
-    {'label': 'CONFIDENCE', 'imagePath': 'assets/confidence.jpg', 'color': Color(0xFF4C2D00)},
-    {'label': 'EXCITED', 'imagePath': 'assets/excited.jpg', 'color': Color(0xFF8D002B)},
-    {'label': 'ANXIETY', 'imagePath': 'assets/anxiety.jpg', 'color': Color(0xFF190E52)}, // 유지
-    {'label': 'HAPPY', 'imagePath': 'assets/happy.jpg', 'color': Color(0xFF7C2901)},
+    {'label': 'SAD', 'imagePath': 'assets/mood/sad.jpg', 'color': Color(0xFF16314F)},
+    {'label': 'ANGRY', 'imagePath': 'assets/mood/angry.jpg', 'color': Color(0xFF850001)},
+    {'label': 'CONFIDENCE', 'imagePath': 'assets/mood/confidence.jpg', 'color': Color(0xFF4C2D00)},
+    {'label': 'EXCITED', 'imagePath': 'assets/mood/excited.jpg', 'color': Color(0xFF8D002B)},
+    {'label': 'ANXIETY', 'imagePath': 'assets/mood/anxiety.jpg', 'color': Color(0xFF190E52)}, // 유지
+    {'label': 'HAPPY', 'imagePath': 'assets/mood/happy.jpg', 'color': Color(0xFF7C2901)},
   ];
 
-  Future<void> _showSplashAndNavigate(String label, String imagePath, Color color) async {
+  Future<void> _showSplashAndNavigate(
+      String label, String imagePath, Color color) async {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -70,14 +71,6 @@ class _MoodSelectorState extends State<MoodSelector> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         // leading 속성 제거하여 기본 뒤로 가기 버튼 표시
-        actions: [
-          IconButton(
-            icon: Icon(Icons.settings),
-            onPressed: () {
-              print("Settings button pressed");
-            },
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -90,7 +83,10 @@ class _MoodSelectorState extends State<MoodSelector> {
             ),
             Text(
               "MOOD",
-              style: TextStyle(fontSize: 36, color: Colors.purple, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 36,
+                  color: Colors.purple,
+                  fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 20),
             Expanded(

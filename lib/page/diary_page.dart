@@ -8,7 +8,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'calendar_page.dart';
 import 'speech_service.dart';
 import 'image_service.dart';
+import 'mood_selector.dart';
 import 'drawer_menu.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DiaryPage extends StatefulWidget {
   final DateTime selectedDate;
@@ -28,7 +30,8 @@ class _DiaryPageState extends State<DiaryPage> {
   String _recordingStatus = "마이크 버튼을 누르고 녹음을 시작하세요";
   bool _isListening = false;
   final SpeechService _speechService = SpeechService();
-  final ImageService _imageService = ImageService();
+  final ImageService _imageService;
+  _DiaryPageState() : _imageService = ImageService('hand-drawn');
   String _recognizedText = "";
   Uint8List? _imageData;
   bool _isLoading = true;
@@ -48,12 +51,36 @@ class _DiaryPageState extends State<DiaryPage> {
     _loadDiaryEntry();
   }
 
-  void _changeDate(int days) {
+  // Firebase에서 해당 날짜에 일기가 있는지 확인하는 메서드
+  Future<bool> _checkDiaryEntry(DateTime date) async {
+    final querySnapshot = await _firestore
+        .collection('diary_entries')
+        .where('date', isEqualTo: date.toIso8601String())
+        .get();
+    return querySnapshot.docs.isNotEmpty;
+  }
+
+  void _changeDate(int days) async {
     setState(() {
       _selectedDate = _selectedDate.add(Duration(days: days));
-      _isLoading = true; // 데이터 로드 중임을 나타내는 상태 업데이트
-      _loadDiaryEntry(); // 새 날짜에 대한 일기 항목 로드
+      _isLoading = true; // 데이터 로드 중임을 표시
     });
+
+    // Firestore에서 선택한 날짜에 대한 일기 여부 확인
+    final hasDiaryEntry = await _checkDiaryEntry(_selectedDate);
+
+    if (hasDiaryEntry) {
+      // 일기가 있으면 해당 일기 내용을 로드
+      await _loadDiaryEntry();
+    } else {
+      // 일기가 없으면 MoodSelector 페이지로 이동
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MoodSelector(selectedDate: _selectedDate),
+        ),
+      );
+    }
   }
 
   void _onRecordButtonPressed() {
@@ -90,6 +117,56 @@ class _DiaryPageState extends State<DiaryPage> {
         _recordingStatus = "이미지 생성 중 오류 발생: $error";
       });
     });
+  }
+
+  String _imageStyle = 'hand-drawn'; // 기본값
+
+  void _showStyleSelectionDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('이미지 스타일 선택'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RadioListTile<String>(
+                title: Text('손으로 그린 스타일'),
+                value: 'hand-drawn',
+                groupValue: _imageStyle,
+                onChanged: (value) {
+                  setState(() {
+                    _imageStyle = value ?? 'hand-drawn'; // null일 경우 기본값 설정
+                    _imageService.setImageStyle(_imageStyle); // 스타일 변경
+                  });
+                  Navigator.pop(context); // 선택 후 다이얼로그 닫기
+                },
+              ),
+              RadioListTile<String>(
+                title: Text('현실적인 스타일'),
+                value: 'realistic',
+                groupValue: _imageStyle,
+                onChanged: (value) {
+                  setState(() {
+                    _imageStyle = value ?? 'hand-drawn'; // null일 경우 기본값 설정
+                    _imageService.setImageStyle(_imageStyle); // 스타일 변경
+                  });
+                  Navigator.pop(context); // 선택 후 다이얼로그 닫기
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // 취소 버튼
+              },
+              child: Text('취소'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> _downloadImage(String? url) async {
@@ -230,7 +307,10 @@ class _DiaryPageState extends State<DiaryPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.settings, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              print("Setting button pressed"); // 버튼 클릭 로그 추가
+              _showStyleSelectionDialog();
+            },
           ),
         ],
       ),

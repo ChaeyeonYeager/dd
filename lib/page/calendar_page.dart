@@ -30,12 +30,6 @@ class _CalendarPageState extends State<CalendarPage> {
             _scaffoldKey.currentState!.openDrawer();
           },
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings, color: Colors.white),
-            onPressed: () {},
-          ),
-        ],
         title: const Text(
           'Calendar',
           style: TextStyle(
