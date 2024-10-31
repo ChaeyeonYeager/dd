@@ -1,12 +1,30 @@
+import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/page/calendar_page.dart';
 import 'login_or_register_page.dart';
 import 'page/loading_sceen.dart';
-import 'page/mood_selector.dart';
 
-class AuthPage extends StatelessWidget {
+class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
+
+  @override
+  _AuthPageState createState() => _AuthPageState();
+}
+
+class _AuthPageState extends State<AuthPage> {
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    // 1초 후에 로딩 상태를 false로 변경
+    Timer(Duration(seconds: 2), () {
+      setState(() {
+        _isLoading = false; // 로딩 플래그 해제
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,31 +32,30 @@ class AuthPage extends StatelessWidget {
       body: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
+          // 연결 상태가 대기 중일 때는 로딩 화면 표시
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return LoadingScreen(); // 로딩 상태 표시
+            return LoadingScreen();
           }
-          // 로그인된 상태라면 calanderPage로 이동
+
+          // 로그인된 상태라면 CalendarPage로 이동
           if (snapshot.hasData) {
-            Future.microtask(() {
-              // 사용자가 로그인된 경우 CalendarPage로 바로 이동
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => CalendarPage()),
-              );
-            });
-            // CalendarPage로 전환되는 동안 빈 Container를 반환 (페이지가 보이지 않도록)
-            return LoadingScreen(); // 캘린더로 이동 중 로딩 화면 표시
+            // 사용자가 로그인된 경우
+            if (_isLoading) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                setState(() {
+                  _isLoading = false; // 로딩 플래그 해제
+                });
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => CalendarPage()),
+                );
+              });
+            }
+            return LoadingScreen();
           }
+
           // 로그인이 안 된 상태라면 로그인/회원가입 페이지로 이동
-          else {
-            Future.microtask(() {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => LoginOrRegisterPage()),
-              );
-            });
-            return LoadingScreen(); // 페이지 이동이 완료될 때까지 로딩 페이지 유지
-          }
+          return LoginOrRegisterPage();
         },
       ),
     );

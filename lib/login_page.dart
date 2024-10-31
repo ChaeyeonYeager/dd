@@ -26,8 +26,12 @@ class _LoginPageState extends State<LoginPage> {
     // show loading circle
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) {
-        return LoadingScreen();
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: LoadingScreen(),
+        );
       },
     );
 

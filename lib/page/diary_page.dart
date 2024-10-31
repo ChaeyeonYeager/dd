@@ -10,7 +10,6 @@ import 'speech_service.dart';
 import 'image_service.dart';
 import 'mood_selector.dart';
 import 'drawer_menu.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'loading_sceen.dart';
 
 class DiaryPage extends StatefulWidget {
@@ -62,13 +61,6 @@ class _DiaryPageState extends State<DiaryPage> {
   }
 
   void _changeDate(int days) async {
-    // 로딩 화면으로 전환
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => LoadingScreen()), // LoadingScreen으로 이동
-    );
-
     setState(() {
       _selectedDate = _selectedDate.add(Duration(days: days));
       _isLoading = true; // 데이터 로드 중임을 표시
@@ -82,7 +74,6 @@ class _DiaryPageState extends State<DiaryPage> {
       await _loadDiaryEntry();
     } else {
       // 일기가 없으면 MoodSelector 페이지로 이동
-      Navigator.pop(context); // 로딩 화면 닫기
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -92,7 +83,9 @@ class _DiaryPageState extends State<DiaryPage> {
     }
 
     // 로딩 화면 닫기
-    Navigator.pop(context); // 로딩 화면 닫기
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   void _onRecordButtonPressed() {
@@ -301,6 +294,10 @@ class _DiaryPageState extends State<DiaryPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return LoadingScreen();
+    }
+
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: _backgroundColor,

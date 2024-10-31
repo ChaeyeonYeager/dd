@@ -80,6 +80,9 @@ class _CalendarPageState extends State<CalendarPage> {
                 final hasDiaryEntry = await _checkDiaryEntry(selectedDay);
 
                 if (hasDiaryEntry) {
+                  setState(() {
+                    _isLoading = false; // 로딩 종료
+                  });
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -90,6 +93,9 @@ class _CalendarPageState extends State<CalendarPage> {
                     ),
                   );
                 } else {
+                  setState(() {
+                    _isLoading = false;
+                  });
                   Navigator.push(
                     context,
                     MaterialPageRoute(
