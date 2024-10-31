@@ -14,7 +14,7 @@ class ImageService {
   Future<String> translateToEnglish(String koreanText) async {
     final response = await http.post(
       Uri.parse(
-          'https://translation.googleapis.com/language/translate/v2?key=AIzaSyAgrjR9nFqQ2puWX124xsUw7XZmZY0rnys'),
+          '(edit here)'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -57,7 +57,7 @@ class ImageService {
       headers: {
         'Content-Type': 'application/json',
         'Authorization':
-            'Bearer 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',
+            '(edit here)',
       },
       body: jsonEncode({'prompt': refinedPrompt}),
     );
