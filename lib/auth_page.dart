@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:my_app/page/calendar_page.dart';
 import 'login_or_register_page.dart';
 import 'page/loading_sceen.dart';
+import 'page/mood_selector.dart';
 
 class AuthPage extends StatelessWidget {
   const AuthPage({super.key});
@@ -16,7 +17,7 @@ class AuthPage extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return LoadingScreen(); // 로딩 상태 표시
           }
-          // 로그인된 상태라면 HomePage로 이동
+          // 로그인된 상태라면 calanderPage로 이동
           if (snapshot.hasData) {
             Future.microtask(() {
               // 사용자가 로그인된 경우 CalendarPage로 바로 이동
@@ -30,7 +31,13 @@ class AuthPage extends StatelessWidget {
           }
           // 로그인이 안 된 상태라면 로그인/회원가입 페이지로 이동
           else {
-            return LoginOrRegisterPage(); // 로그인 페이지로 이동
+            Future.microtask(() {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => LoginOrRegisterPage()),
+              );
+            });
+            return LoadingScreen(); // 페이지 이동이 완료될 때까지 로딩 페이지 유지
           }
         },
       ),

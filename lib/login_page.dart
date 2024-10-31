@@ -6,6 +6,7 @@ import 'my_textfield.dart';
 import 'square_title.dart';
 import 'page/calendar_page.dart';
 import 'register_page.dart'; // 등록 페이지 임포트
+import 'page/loading_sceen.dart';
 
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
@@ -26,9 +27,7 @@ class _LoginPageState extends State<LoginPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
+        return LoadingScreen();
       },
     );
 

@@ -14,8 +14,7 @@ class ImageService {
   Future<String> translateToEnglish(String koreanText) async {
     final response = await http.post(
       Uri.parse(
-          //'https://translation.googleapis.com/language/translate/v2?key=AIzaSyAgrjR9nFqQ2puWX124xsUw7XZmZY0rnys'),
-          '(edit here)'),
+          'https://translation.googleapis.com/language/translate/v2?key=AIzaSyAgrjR9nFqQ2puWX124xsUw7XZmZY0rnys'),
       headers: {
         'Content-Type': 'application/json',
       },
