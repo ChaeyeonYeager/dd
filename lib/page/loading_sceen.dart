@@ -6,6 +6,11 @@ import 'diary_page.dart';
 class LoadingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    final spinnerSize = screenHeight * 0.2; // 전체 높이의 20%로 설정
+
     return Scaffold(
       body: Stack(
         children: [
@@ -15,13 +20,13 @@ class LoadingScreen extends StatelessWidget {
             ),
           ),
           Align(
-            alignment: const FractionalOffset(0.5, 0.45),
+            alignment: const FractionalOffset(0.5, 0.46),
             child: SizedBox(
-              width: 150, // 스피너의 크기
-              height: 150,
+              width: spinnerSize,
+              height: spinnerSize,
               child: CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
-                strokeWidth: 8.0,
+                strokeWidth: 7.0,
               ),
             ),
           ),

@@ -5,7 +5,7 @@ import 'my_button.dart';
 import 'my_textfield.dart';
 import 'square_title.dart';
 import 'page/calendar_page.dart';
-import 'register_page.dart'; // 등록 페이지 임포트
+import 'register_page.dart';
 import 'page/loading_sceen.dart';
 
 class LoginPage extends StatefulWidget {
@@ -18,31 +18,26 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
-  final passwordController = TextEditingController(); // 'password' 스펠링 수정
+  final passwordController = TextEditingController();
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   // sign user in method
   void signUserIn() async {
-    // show loading circle
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          child: LoadingScreen(),
-        );
-      },
+    // show loading screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoadingScreen(),
+      ),
     );
 
-    // try sign in
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text,
-        password: passwordController.text, // 'password' 스펠링 수정
+        password: passwordController.text,
       );
 
-      // pop the loading circle
+      // pop the loading screen
       Navigator.pop(context);
       Navigator.pushReplacement(
         context,
@@ -58,20 +53,17 @@ class _LoginPageState extends State<LoginPage> {
 
   // 구글 로그인 메서드
   Future<void> signInWithGoogle() async {
-    // show loading circle
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
+    // show loading screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoadingScreen(),
+      ),
     );
 
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
-        // 로그인 취소 시 대화 상자 닫기
         Navigator.pop(context);
         return;
       }
@@ -88,7 +80,6 @@ class _LoginPageState extends State<LoginPage> {
             await FirebaseAuth.instance.signInWithCredential(credential);
         Navigator.pop(context);
 
-        // 로그인 성공 후 환영 화면으로 이동
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -123,26 +114,21 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF6200EE), // 배경색 설정
+      backgroundColor: const Color(0xFF6200EE),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 28.0), // 좌우 여백 추가
+              padding: const EdgeInsets.symmetric(horizontal: 28.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const SizedBox(height: 50),
-
-                  // logo
                   const CircleAvatar(
                     radius: 50,
                     backgroundImage: AssetImage('assets/logo.jpg'),
                   ),
-
                   const SizedBox(height: 50),
-
-                  // welcome back, you've been missed!
                   Text(
                     'Welcome back you\'ve been missed!',
                     style: TextStyle(
@@ -150,9 +136,7 @@ class _LoginPageState extends State<LoginPage> {
                       fontSize: 16,
                     ),
                   ),
-
                   const SizedBox(height: 25),
-
                   TextField(
                     controller: emailController,
                     decoration: InputDecoration(
@@ -166,9 +150,8 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  // 비밀번호 입력 필드
                   TextField(
-                    controller: passwordController, // 'password' 스펠링 수정
+                    controller: passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
                       filled: true,
@@ -181,8 +164,6 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 24),
-
-                  // forgot password
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: Row(
@@ -195,10 +176,7 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     ),
                   ),
-
                   const SizedBox(height: 25),
-
-                  // sign in button
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -217,7 +195,6 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  // 'Or continue with' 구분선
                   Row(
                     children: [
                       Expanded(
@@ -242,23 +219,19 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                   const SizedBox(height: 16),
-
-                  // google sign in button
                   GestureDetector(
                     onTap: signInWithGoogle,
                     child: const CircleAvatar(
                       backgroundColor: Colors.white,
                       radius: 24,
                       child: Image(
-                        image: AssetImage('lib/images/google.png'), // 구글 로고 이미지
+                        image: AssetImage('lib/images/google.png'),
                         height: 24,
                         width: 24,
                       ),
                     ),
                   ),
                   const SizedBox(height: 30),
-
-                  // not a member? register now
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -267,7 +240,7 @@ class _LoginPageState extends State<LoginPage> {
                         style: TextStyle(color: Colors.white70),
                       ),
                       GestureDetector(
-                        onTap: widget.onTap, // 등록 페이지로 이동
+                        onTap: widget.onTap,
                         child: const Text(
                           ' Register now',
                           style: TextStyle(
